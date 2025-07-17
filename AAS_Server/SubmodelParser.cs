@@ -66,7 +66,7 @@ namespace AASProject
             }
 
             // .pk 파일 추가
-            string pkFilePath = @"C:\Users\suin\Desktop\OPCUA_GTSU\AAS_Server_MongoDB\predictive_model.pk";
+            string pkFilePath = Path.Combine(Directory.GetCurrentDirectory(), "predictive_model.pk");
             
             if (File.Exists(pkFilePath))
             {

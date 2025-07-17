@@ -15,6 +15,8 @@ namespace AASProject
     public class OpcUaBridge
     {
         private static readonly HttpClient client = new HttpClient(); // ✅ 2. HttpClient 객체 추가
+        private const string BasyxBaseUrl = "http://localhost:8081";
+        private const string AasId = "aHR0cHM6Ly9hY3BsdC5vcmcvR1RTVV8xMA=="; // https://acplt.org/GTSU_10
         private Session? _session;
         private ModelPredictor _trainer = new ModelPredictor();
         private bool _modelLoaded = false;
@@ -179,19 +181,26 @@ namespace AASProject
         {
             try
             {
-                // FaultPrediction 값 업데이트
-                string predictionSubmodelId = "aHR0cHM6Ly9hY3BsdC5vcmcvR1RTVV8xMC9QcmVkaWN0aW9u";
-                string predictionApiUrl = $"http://localhost:8081/submodels/{predictionSubmodelId}/submodel-elements/FaultPrediction/value";
+                string predictionSubmodelId = "aHR0cHM6Ly9hY3BsdC5vcmcvR1RTVV8xMC9QcmVkaWN0aW9u"; // Prediction
+                string dataSubmodelId = "aHR0cHM6Ly9hY3BsdC5vcmcvR1RTVV8xMC9EYXRh"; // Data
+
+                string predictionApiUrl = $"{BasyxBaseUrl}/shells/{AasId}/submodels/{predictionSubmodelId}/submodel-elements/FaultPrediction/value";
+                string sensorApiUrl = $"{BasyxBaseUrl}/shells/{AasId}/submodels/{dataSubmodelId}/submodel-elements/LiveSensor/value";
+
                 var predictionContent = new StringContent($"\"{predictionResult.ToLower()}\"", Encoding.UTF8, "application/json");
-                await client.PutAsync(predictionApiUrl, predictionContent);
-
-                // LiveSensor 값 업데이트
-                string dataSubmodelId = "aHR0cHM6Ly9hY3BsdC5vcmcvR1RTVV8xMC9EYXRh";
-                string sensorApiUrl = $"http://localhost:8081/submodels/{dataSubmodelId}/submodel-elements/LiveSensor/value";
                 var sensorContent = new StringContent($"\"{liveSensorValue}\"", Encoding.UTF8, "application/json");
-                await client.PutAsync(sensorApiUrl, sensorContent);
 
-                Console.WriteLine("✅ Successfully updated values to BaSyx server.");
+                var predResp = await client.PutAsync(predictionApiUrl, predictionContent);
+                var sensorResp = await client.PutAsync(sensorApiUrl, sensorContent);
+
+                if (predResp.IsSuccessStatusCode && sensorResp.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("✅ Successfully updated values to BaSyx server.");
+                }
+                else
+                {
+                    Console.WriteLine($"⚠️ BaSyx update failed. Prediction status: {predResp.StatusCode}, Sensor status: {sensorResp.StatusCode}");
+                }
             }
             catch (HttpRequestException e)
             {
