@@ -1,0 +1,20 @@
+MachineryIdentification, DefaultInstanceBrowseName, GTSU_#10
+MachineryIdentification, DeviceClass, 1
+MachineryIdentification, MachineryID, KBA11V
+MachineryOperationMode, CurrentOperationMode, Processing
+MachinerySpecification, BoomUpHeight, 86.8
+MachinerySpecification, BucketMaxLift, 45.0
+MachinerySpecification, Capacity, 2000.0
+MachinerySpecification, HoistingMaxSpeed, 183.0
+MachinerySpecification, HoistingMinSpeed, 152.0
+MachinerySpecification, LiftingLoad, 58.0
+MachinerySpecification, Material1, Coal
+MachinerySpecification, Material2, Ore
+MachinerySpecification, OutReach, 42.0
+MachinerySpecification, ShipSize, 300000.0
+MachinerySpecification, Span, 30.0
+MachinerySpecification, TravellingSpeed, 20.0
+MachinerySpecification, TraversingSpeed, 200.0
+MachinerySpecification, WheelingBase, 02020225.0
+MachineryState, CurrentState, Execut
+Prediction,FaultPrediction,False
